@@ -42,4 +42,4 @@ def acctlogin(request):
         else:
             # If there were errors, we render the form with these
             # errors
-            return render(request, '/registration/login.html', {'form': form})
+            return render(request, 'login.html', {'form': form})

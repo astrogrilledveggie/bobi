@@ -42,9 +42,9 @@ INSTALLED_APPS = [ # all my apps here will be migrated
 
     'polls.apps.PollsConfig',
     'chatterbot.ext.django_chatterbot',
-    'chatbot.apps.ChatbotConfig',
-    'accounts',
-    'chatbot.budget',
+    'accounts.apps.AuthConfig',
+    'chatbot.budget.apps.BudgetConfig',
+    'chatbot.apps.ChatbotConfig'
 ]
 
 REST_FRAMEWORK = {
@@ -61,14 +61,24 @@ CHATTERBOT = {
     'name': 'bobi',
     'django_app_name': 'django_chatterbot',
     'logic_adapters': [
+        {
+            'import_path': 'chatterbot.logic.SpecificResponseAdapter',
+            'input_text': 'category' or 'details' or 'amount',
+            'output_text': 'I have recorded your spending as requested. Please proceed to /budget to view your records.'
+        },
+        {
+            'import_path': 'chatterbot.logic.SpecificResponseAdapter',
+            'input_text': 'how' and 'much' and 'spend',
+            'output_text': 'Look in your console to see the results.'
+        },
+        {
+            'import_path': 'chatterbot.logic.SpecificResponseAdapter',
+            'input_text': 'destroy' and 'entry' and 'id',
+            'output_text': 'I have destroyed your entry as requested. Please proceed to /budget to view your records.'
+        },
         'chatterbot.logic.BestMatch',
         'chatterbot.logic.MathematicalEvaluation',
         'chatterbot.logic.TimeLogicAdapter',
-        {
-            'import_path': 'chatterbot.logic.SpecificResponseAdapter',
-            'input_text': 'Help',
-            'output_text': 'Ok, please calm down and dial 999'
-        },
         {
             'import_path': 'chatterbot.logic.BestMatch',
             'default_response': 'I am sorry, but I do not understand.',

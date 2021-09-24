@@ -32,7 +32,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('api-accounts/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
+    path('budget/', include('chatbot.budget.urls')),
     path('chatbot/', include('chatbot.urls')),
     path('polls/', include('polls.urls')),
-    path('budget/', include('chatbot.budget.urls')),
 ]

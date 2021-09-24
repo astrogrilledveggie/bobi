@@ -1,30 +1,78 @@
+{% block content %}
 
-<h1>Your spending records</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bobi - Virtual Butler</title>
+    <!--Bootstrap CSS-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  </head>
+  <body>
 
-<p>
-    {% if spenditem %}
-    <table>
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+      <a class="navbar-brand" href="/chatbot">Bobi</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/chatbot/app">Chatbot</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/budget">Spend</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
 
-        <tr>
-            <td>Date</td>
-            <td>Category</td>
-            <td>Details</td>
-            <td>Amount</td>
-        </tr>
+    <h1 class="mt-5 ml-5">Your spending records</h1>
 
-        {% for spenditem in spenditem %}
-        <tr>
-            <td>{{ spenditem.date }}</td>
-            <td>{{ spenditem.category }}</td>
-            <td>{{ spenditem.details }}</td>
-            <td>{{ spenditem.amount }}</td>
-        </tr>
+    <p>
+        {% if spenditem %}
+        <table class="mt-5 ml-5 table table-hover table-striped table-sm" style="width: 90%">
 
-    </table>
-    {% endfor %}
+            <thead>
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Details</th>
+                    <th scope="col">Amount</th>
+                </tr>
+            </thead>
 
-    {% else %}
-    <p>You have not spent on anything!</p>
-    {% endif %}
+            <tbody>
 
-</p>
+                {% for spenditem in spenditem %}
+                <tr>
+                    <td>{{ spenditem.id }}</td>
+                    <td>{{ spenditem.date }}</td>
+                    <td>{{ spenditem.category }}</td>
+                    <td>{{ spenditem.details }}</td>
+                    <td>{{ spenditem.amount }}</td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+        <p class="mt-5 ml-5">You have not spent on anything!</p>
+        {% endif %}
+
+    </p>
+
+    <!-- Optional Javascript -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+{% endblock %}
