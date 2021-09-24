@@ -23,7 +23,7 @@ def index(request):
 
 def acctlogin(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect('/admin/')
+        return HttpResponseRedirect('/chatbot/app/')
     if request.method == 'GET':
         form = AuthenticationForm()
         return render(request, 'login.html', {'form': form})
@@ -36,7 +36,7 @@ def acctlogin(request):
             if user is not None:
                 print(user)
                 login(request, user)
-                return HttpResponseRedirect('/admin/')
+                return HttpResponseRedirect('/chatbot/app/')
             else:
                 print('User not found')
         else:
