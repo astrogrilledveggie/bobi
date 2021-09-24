@@ -49,18 +49,54 @@ class ChatterBotAppView(TemplateView):
     ]
     trainer.train(conversation)
 
+    budgetconvo = [
+        "I spent money", # user
+        "Please tell me the category, details, and amount spent", # bot
+        "Please record my spending",  # user
+        "Please tell me the category, details, and amount spent",  # bot
+        "Note spending",  # user
+        "Please tell me the category, details, and amount spent",  # bot
+        "category is something details is something amount is something",  # user
+        "I have recorded your spending as requested. Please proceed to /budget to view your records.",  # bot
+    ]
+    trainer.train(budgetconvo)
+
     def post(self, request, *args, **kwargs):
         thisuser = request.user
 
-        hotwords = [
-            "date",
-            "category",
-            "details",
-            "amount",
-            "spend",
-            "budget",
-        ]
+        # USERINPUT
+        userText = request.POST.get('msg')
+        print(userText)
 
+        input_data = Userinput(userinput_text=userText, user=thisuser)
+        input_data.save()
+
+        if "category" and "details" and "amount" in userText:
+            print("working yay")
+
+            # save budget records
+
+            # generate bot response and save to botmessage db
+            botresp = self.chatterbot.get_response(userText)
+            print(botresp)
+
+            resp = Botmessage(botmessage_text=botresp, userinput_id=input_data.id, user=thisuser)
+            resp.save()
+
+            response_data = botresp.serialize()
+            return JsonResponse(response_data, status=200)
+        else:
+            # BOTMESSAGE
+            botresp = self.chatterbot.get_response(userText)
+            print(botresp)
+
+            resp = Botmessage(botmessage_text=botresp, userinput_id=input_data.id, user=thisuser)
+            resp.save()
+
+            response_data = botresp.serialize()
+            return JsonResponse(response_data, status=200)
+
+        '''
         # USERINPUT
         userText = request.POST.get('msg')
         print(userText)
@@ -77,6 +113,7 @@ class ChatterBotAppView(TemplateView):
 
         response_data = botresp.serialize()
         return JsonResponse(response_data, status=200)
+        '''
 
     def get(self, request, *args, **kwargs):
         return render(request, 'chatbot/index.html')
