@@ -19,18 +19,18 @@
   <section class="msger">
     <header class="msger-header">
       <div class="msger-header-title">
-        <i class="fas fa-bug"></i> Bobi <i class="fas fa-bug"></i>
+        Bobi
       </div>
     </header>
 
     <main class="msger-chat">
       <div class="msg left-msg">
-        <div class="msg-img" style="background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg)"></div>
+        <div class="msg-img" style="background-image: url(https://cdn-icons-png.flaticon.com/512/635/635208.png)"></div>
 
         <div class="msg-bubble">
           <div class="msg-info">
             <div class="msg-info-name">Bobi</div>
-            <div class="msg-info-time">12:45</div>
+            <div class="msg-info-time"></div>
           </div>
 
           <div class="msg-text">
@@ -58,8 +58,8 @@
 
 
     // Icons made by Freepik from www.flaticon.com
-    const BOT_IMG = "https://image.flaticon.com/icons/svg/327/327779.svg";
-    const PERSON_IMG = "https://image.flaticon.com/icons/svg/145/145867.svg";
+    const BOT_IMG = "https://cdn-icons-png.flaticon.com/512/635/635208.png";
+    const PERSON_IMG = "https://cdn-icons-png.flaticon.com/512/2945/2945287.png";
     const BOT_NAME = "Bobi";
     const PERSON_NAME = "You";
 
@@ -96,11 +96,19 @@
     function botResponse(rawText) {
 
       // Bot Response
+      // $.post("/chatbot/app/", { msg: rawText }).done(function (data) {
+      //   console.log(rawText);
+      //   console.log(data);
+      //   const msgText = data;
+      //   appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+
+      // });
+
+      // Bot Response
       $.post("/chatbot/app/", { msg: rawText }).done(function (data) {
-        console.log(rawText);
-        console.log(data);
-        const msgText = data;
-        appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+        console.log(data)
+        console.log(data.text)
+        appendMessage(BOT_NAME, BOT_IMG, "left", data.text);
 
       });
 
