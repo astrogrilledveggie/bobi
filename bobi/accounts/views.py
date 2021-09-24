@@ -1,6 +1,6 @@
 from django.contrib.auth import login
 from django.contrib.auth import authenticate
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 
@@ -22,12 +22,24 @@ def index(request):
     return HttpResponse("You are at accounts index")
 
 def acctlogin(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(request, username=username, password=password)
-    if user is not None:
-        login(request, user)
-        redirect('/chatbot/app')
-    else:
-        return HttpResponse("Invalid Login")
-    return render(request, 'login.html', {'form': form})
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/admin/')
+    if request.method == 'GET':
+        form = AuthenticationForm()
+        return render(request, 'login.html', {'form': form})
+    if request.method == 'POST':
+        form = AuthenticationForm(request=request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                print(user)
+                login(request, user)
+                return HttpResponseRedirect('/admin/')
+            else:
+                print('User not found')
+        else:
+            # If there were errors, we render the form with these
+            # errors
+            return render(request, '/registration/login.html', {'form': form})
