@@ -1,0 +1,30 @@
+
+<h1>Your spending records</h1>
+
+<p>
+    {% if spenditem %}
+    <table>
+
+        <tr>
+            <td>Date</td>
+            <td>Category</td>
+            <td>Details</td>
+            <td>Amount</td>
+        </tr>
+
+        {% for spenditem in spenditem %}
+        <tr>
+            <td>{{ spenditem.date }}</td>
+            <td>{{ spenditem.category }}</td>
+            <td>{{ spenditem.details }}</td>
+            <td>{{ spenditem.amount }}</td>
+        </tr>
+
+    </table>
+    {% endfor %}
+
+    {% else %}
+    <p>You have not spent on anything!</p>
+    {% endif %}
+
+</p>

@@ -1,18 +1,14 @@
 import json
-from django.core import serializers  # JSON SERIALIZE METHOD
 from django.views.generic.base import TemplateView
 from django.views.generic import View
-from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
-from django.template import loader   # TEMPLATE METHOD
+from django.http import JsonResponse
 from django.shortcuts import render  # RENDER() METHOD
-from django.urls import reverse
 from chatterbot import ChatBot
 from chatterbot.ext.django_chatterbot import settings
 from chatterbot.trainers import ListTrainer
-from chatterbot.trainers import ChatterBotCorpusTrainer
-from flask import render_template
-from chatbot import chatbot
 from .models import Botmessage, Userinput
+from .budget.models import Budget
+
 
 def index(request):
     return render(request, 'chatbot/app.html')
@@ -32,6 +28,8 @@ class ChatterBotAppView(TemplateView):
 
     chatterbot = ChatBot(**settings.CHATTERBOT)
 
+    trainer = ListTrainer(chatterbot)
+
     # Training with Personal Ques & Ans
     conversation = [
         "Hello", # user
@@ -49,25 +47,33 @@ class ChatterBotAppView(TemplateView):
         "input gaby", # user
         "output gaby" # bot
     ]
-
-    trainer = ListTrainer(chatterbot)
     trainer.train(conversation)
 
     def post(self, request, *args, **kwargs):
+        thisuser = request.user
+
+        hotwords = [
+            "date",
+            "category",
+            "details",
+            "amount",
+            "spend",
+            "budget",
+        ]
+
+        # USERINPUT
         userText = request.POST.get('msg')
         print(userText)
 
-        input_data = Userinput(userinput_text=userText)
+        input_data = Userinput(userinput_text=userText, user=thisuser)
         input_data.save()
 
+        # BOTMESSAGE
         botresp = self.chatterbot.get_response(userText)
         print(botresp)
 
-        resp = Botmessage(botmessage_text=botresp, userinput_id=input_data.id)
+        resp = Botmessage(botmessage_text=botresp, userinput_id=input_data.id, user=thisuser)
         resp.save()
-
-        def get(self, request, *args, **kwargs):
-            return render(request, 'chatbot/index.html', {'botresp': botresp})
 
         response_data = botresp.serialize()
         return JsonResponse(response_data, status=200)

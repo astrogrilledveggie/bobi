@@ -5,10 +5,9 @@ from django.shortcuts import render  # RENDER() METHOD
 from django.urls import reverse
 
 from .models import Budget
-from django.contrib.auth.models import User
 
 def index(request):
-    thisuser = User.username
+    thisuser = request.user
     spenditem = Budget.objects.all().filter(user=thisuser)
     context = {'spenditem': spenditem}
     return render(request, 'budget/index.html', context)

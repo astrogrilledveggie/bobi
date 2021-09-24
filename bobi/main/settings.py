@@ -44,6 +44,7 @@ INSTALLED_APPS = [ # all my apps here will be migrated
     'chatterbot.ext.django_chatterbot',
     'chatbot.apps.ChatbotConfig',
     'accounts',
+    'chatbot.budget',
 ]
 
 REST_FRAMEWORK = {
@@ -60,9 +61,19 @@ CHATTERBOT = {
     'name': 'bobi',
     'django_app_name': 'django_chatterbot',
     'logic_adapters': [
+        'chatterbot.logic.BestMatch',
         'chatterbot.logic.MathematicalEvaluation',
         'chatterbot.logic.TimeLogicAdapter',
-        'chatterbot.logic.BestMatch'
+        {
+            'import_path': 'chatterbot.logic.SpecificResponseAdapter',
+            'input_text': 'Help',
+            'output_text': 'Ok, please calm down and dial 999'
+        },
+        {
+            'import_path': 'chatterbot.logic.BestMatch',
+            'default_response': 'I am sorry, but I do not understand.',
+            'maximum_similarity_threshold': 0.90
+        },
     ],
     'trainer': 'chatterbot.trainers.ChatterBotCorpusTrainer',
     'training_data': [
@@ -90,6 +101,7 @@ TEMPLATES = [
             "./chatbot/templates/chatbot/",
             "./polls/templates/polls/",
             "./accounts/templates/accounts/",
+            "./chatbot/budget/templates/budget/",
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -174,4 +186,4 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'home' # The default value for LOGIN_REDIRECT_URL is /accounts/profile/
+LOGIN_REDIRECT_URL = '/accounts/login/' # The default value for LOGIN_REDIRECT_URL is /accounts/profile/

@@ -1,6 +1,12 @@
 from django.db import models
 
 class Budget(models.Model):
+    Dining = 'Dining'
+    Groceries = 'Groceries'
+    Bill = 'Bill'
+    Transport = 'Transport'
+    Shopping = 'Shopping'
+    Others = 'Others'
     category_choices = [
         (Dining, 'Dining'),
         (Groceries, 'Groceries'),

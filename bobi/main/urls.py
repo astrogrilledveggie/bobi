@@ -34,4 +34,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('chatbot/', include('chatbot.urls')),
     path('polls/', include('polls.urls')),
+    path('budget/', include('chatbot.budget.urls')),
 ]
