@@ -16,13 +16,12 @@ Including another URLconf
 
 from django.urls import path
 from . import views
-from .views import ChatterBotAppView, ChatterBotApiView, send
+from .views import ChatterBotAppView, ChatterBotApiView
 
 app_name = 'chatbot/' # route namespacing i.e. setting /chatbot as home directory
 
 urlpatterns = [
     path('', views.index, name='index'),
     path('app/', ChatterBotAppView.as_view(), name='chatbot-app'),
-    path('app/send', send, name='send'),
     path('api/', ChatterBotApiView.as_view(), name='chatbot-api'),
 ]

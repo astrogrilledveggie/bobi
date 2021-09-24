@@ -96,7 +96,7 @@
     function botResponse(rawText) {
 
       // Bot Response
-      $.post("/send", { msg: rawText }).done(function (data) {
+      $.post("/chatbot/app/", { msg: rawText }).done(function (data) {
         console.log(rawText);
         console.log(data);
         const msgText = data;

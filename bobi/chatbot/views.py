@@ -22,19 +22,52 @@ def index(request):
     return render(request, 'chatbot/app.html')
 
 class ChatterBotAppView(TemplateView):
-    template_name = 'chatbot/index.html'
+    chatterbot = ChatBot(**settings.CHATTERBOT)
 
-def send(request):
-    if request.method == "GET":
-        print("this is GET")
+    # Training with Personal Ques & Ans
+    conversation = [
+        "Hello",
+        "Hi there!",
+        "How are you doing",
+        "Im doing great",
+        "That is good to hear",
+        "Thank you",
+        "You are welcome",
+        "goodbye",
+        "input gaby",
+        "output gaby"
+    ]
 
-    if request.method == "POST":
+    trainer = ListTrainer(chatterbot)
+    trainer.train(conversation)
+
+    '''
+    # Training with English Corpus Data
+    trainer_corpus = ChatterBotCorpusTrainer(chatterbot)
+    trainer_corpus.train(
+        'chatterbot.corpus.english'
+    )
+    '''
+
+    def post(self, request, *args, **kwargs):
         userText = request.POST.get('msg')
         print(userText)
 
-        botresp = chatbot.get_response(userText)
+        input_data = Userinput(userinput_text=userText)
+        input_data.save()
+        print(input_data)
+
+        botresp = self.chatterbot.get_response(userText)
         print(botresp)
-        return botresp
+
+        resp = Botmessage(botmessage_text=botresp, userinput_id=input_data.id)
+        resp.save()
+
+        response_data = botresp.serialize()
+        return JsonResponse(response_data, status=200)
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'chatbot/index.html')
 
 class ChatterBotApiView(View):
     """
