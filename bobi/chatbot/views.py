@@ -40,25 +40,39 @@ class ChatterBotAppView(TemplateView):
     ]
     trainer.train(conversation)
 
-    budgetconvo = [
+    trainer.train([
         "I spent money", # user
         "Please tell me in this format: category XX details XX amount XX", # bot
-        "category XX details XX amount XX",
-        "I have recorded your spending as requested. Please proceed to /budget to view your records.",  # bot
-        "Please record my spending", # user
-        "Please tell me in this format: category XX details XX amount XX", # bot
-        "Note spending", # user
-        "Please tell me in this format: category XX details XX amount XX", # bot
-        "category" and "details" and "amount", # user
+        "category XX details XX amount XX", # user
         "I have recorded your spending as requested. Please proceed to /budget to view your records.", # bot
+    ])
+
+    trainer.train([
         "Destroy entry",  # user
         "Please tell me the id of the entry you would like to delete",  # bot
         "Destroy entry id",  # user
         "I have destroyed your entry as requested. Please proceed to /budget to view your records.",  # bot
+    ])
+
+    trainer.train([
         "Spending insights",  # user
         "What would you like to find out about your spending?",  # bot
         "How much did I spend in",  # user
         "Look in your console to see the results.",  # bot
+    ])
+
+    trainer.train([
+        "Spending insights",  # user
+        "What would you like to find out about your spending?",  # bot
+        "How much did I spend on",  # user
+        "Look in your console to see the results.",  # bot
+    ])
+
+    budgetconvo = [
+        "I spent money",  # user
+        "Please tell me in this format: category XX details XX amount XX",  # bot
+        "category" and "details" and "amount",  # user
+        "I have recorded your spending as requested. Please proceed to /budget to view your records.",  # bot
     ]
     trainer.train(budgetconvo)
 
@@ -78,7 +92,7 @@ class ChatterBotAppView(TemplateView):
             listofusertext = userText.split()
             category = listofusertext[1].lower()
             details = listofusertext[3].lower()
-            amount = int(listofusertext[5])
+            amount = float(listofusertext[5])
 
             spendentry = Budget(category=category, details=details, amount=amount, user=thisuser)
             spendentry.save()
@@ -108,7 +122,7 @@ class ChatterBotAppView(TemplateView):
 
                 sum = 0
                 for x in recordstosummate:
-                    sum = sum + int(x["amount"])
+                    sum = sum + float(x["amount"])
                 print(sum)
             # how much did I spend ON category
             elif factor == 'on':
@@ -120,7 +134,7 @@ class ChatterBotAppView(TemplateView):
 
                 sum = 0
                 for x in recordstosummate:
-                    sum = sum + int(x["amount"])
+                    sum = sum + float(x["amount"])
                 print(sum)
 
             botresp = self.chatterbot.get_response(userText)
@@ -136,18 +150,28 @@ class ChatterBotAppView(TemplateView):
             listofusertext = userText.split()
             id = int(listofusertext[3])
 
-            recordtodestroy = Budget.objects.filter(id=id)
-            recordtodestroy.delete()
+            if id:
+                recordtodestroy = Budget.objects.filter(id=id)
+                recordtodestroy.delete()
 
-            # BOTMESSAGE
-            botresp = self.chatterbot.get_response(userText)
-            print(botresp)
+                # BOTMESSAGE
+                botresp = self.chatterbot.get_response(userText)
+                print(botresp)
 
-            resp = Botmessage(botmessage_text=botresp, userinput_id=input_data.id, user=thisuser)
-            resp.save()
+                resp = Botmessage(botmessage_text=botresp, userinput_id=input_data.id, user=thisuser)
+                resp.save()
 
-            response_data = botresp.serialize()
-            return JsonResponse(response_data, status=200)
+                response_data = botresp.serialize()
+                return JsonResponse(response_data, status=200)
+            else:
+                botresp = self.chatterbot.get_response(userText)
+                print(botresp)
+
+                resp = Botmessage(botmessage_text=botresp, userinput_id=input_data.id, user=thisuser)
+                resp.save()
+
+                response_data = botresp.serialize()
+                return JsonResponse(response_data, status=200)
         else:
             botresp = self.chatterbot.get_response(userText)
             print(botresp)

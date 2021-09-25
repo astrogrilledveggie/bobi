@@ -28,6 +28,18 @@
           </li>
         </ul>
       </div>
+
+      <div id="nav-right">
+          <ul class="d-flex navbar-nav">
+              {% if user.is_authenticated %}
+                  <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
+                  <li class="nav-item"><a class="nav-link" href="/accounts/logout">Logout</a></li>
+              {% else %}
+                  <li class="nav-item"><a class="nav-link" href="/accounts/signup">Signup</a></li>
+                  <li class="nav-item"><a class="nav-link" href="/accounts/login">Login</a></li>
+              {% endif %}
+          </ul>
+      </div>
     </nav>
 
     <h1 class="mt-5 ml-5">Signup</h1>

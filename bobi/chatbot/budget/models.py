@@ -20,5 +20,5 @@ class Budget(models.Model):
     date = models.DateField(auto_now_add=True)
     category = models.CharField(max_length=255, choices=category_choices, default=Others,)
     details = models.CharField(max_length=255)
-    amount = models.IntegerField()
+    amount = models.DecimalField(max_digits=8, decimal_places=2)
     user = models.CharField(max_length=255)
